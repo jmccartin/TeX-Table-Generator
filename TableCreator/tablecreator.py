@@ -7,7 +7,7 @@ from BrocReader import confighandler
 class TableCreator(object):
 	"""Creates the LateX table for a range of processes"""
 
-	header = '''\begin{table}[!htbp]
+	header = r'''\begin{table}[!htbp]
 \begin{center}
     \footnotesize
         '''
@@ -18,61 +18,77 @@ class TableCreator(object):
 		output_dir = self.config_reader.get_output_dir()
                 self.datasets = self.config_reader.get_datasets()
 
+                # Write the header information to the latex file
 		self.table_file = os.path.join(output_dir, 'table.tex')
 		self.table_file = open(self.table_file, 'w')
 		self.table_file.write(self.header)
 
                 
 
-        def writetable(self, processes):
+        def writetable(self, processes, processes_unc):
 
-                a = {}
+                # Resort the collection of all datasets into a single dictionary
+                process_dict = {}
+                process_unc_dict = {}
                 for dictionary in processes:
                         for key,value in dictionary.items():
-                                a[key] = value
+                                process_dict[key] = value
+                for dictionary in processes_unc:
+                        for key,value in dictionary.items():
+                                process_unc_dict[key] = value
 
-                print self.datasets
-                print a.keys()
-
+                # Arrange the keys of the dictionary into the order defined in 'datasets' specified in the config
                 channels = {}
                 i = 0
                 for dataset in self.datasets:
-                        for element in a.keys():
+                        for element in process_dict.keys():
+                                # Regexp the name of the dataset given the base name that appears in the config
                                 name = re.search('('+str(dataset)+'\w+)', element)
                                 if name:
                                         channels[name.groups()[0]] = i
                                         i += 1
 
-                #for keys in a.keys():
-                #print keys.split('_mu')[0]
-                b = collections.OrderedDict()
+                # Create an ordered dictionary with associated values to the keys that were ordered in the previous step
+                sorted_processes = collections.OrderedDict()
+                for key in sorted(process_dict, key=channels.get):
+                        # Look up the latex translation for the given dataset name from the config
+                        name = self.config_reader.get_latex_dataset_name(str(key))
+                        sorted_processes[name] = process_dict[key]
 
-                for key in sorted(a, key=channels.get):
-                        print key, a[key]
-                        b[key] = a[key]
+                # Create an ordered dictionary with associated uncertainty values to the keys that were ordered in the previous step
+                sorted_uncerts = collections.OrderedDict()
+                for key in sorted(process_unc_dict, key=channels.get):
+                        # Look up the latex translation for the given dataset name from the config
+                        name = self.config_reader.get_latex_dataset_name(str(key))
+                        sorted_uncerts[name] = process_unc_dict[key]
 
-                print b.values()
+                # Map the values to a list so a total can be appended to it later
+                events = map(list, sorted_processes.values())
+                event_uncerts = map(list, sorted_uncerts.values())
 
-                c = map(list, zip(*b.values()))
-                d = map(list, zip(b.values()))
-                print c
-                print d
-                print ', '.join(str(x[0][1]) for x in d)
+                # Calculate the total events passed and associated uncertainties for each row
+                total_mc = []
+                total_mc_uncert = []
+                for j in range(len(events[0])):
+                        events_passed_total = 0
+                        uncertainty_total = 0
+                        for i in range(len(events)):
+                                events_passed_total += events[i][j]
+                                uncertainty_total += event_uncerts[i][j]
+                        total_mc.append(events_passed_total)
+                        total_mc_uncert.append(uncertainty_total)
+                # Append the totals back to the mapped list
+                events.append(total_mc)
+                event_uncerts.append(total_mc_uncert)
 
-                #for i in range(3):
-                #        print ', '.join(str(b.values()[x][i]) for x in b.values())
+                # Write the names of the process + channel to each column
+                self.table_file.write(' & '.join(str(x) for x in sorted_processes.keys()) + ' & ')
+                self.table_file.write(r'Total MC \\' + '\n')
+                # Write the values + uncertainty to each column
+                for i in range(len(events[0])):
+                        self.table_file.write('\t' + ' & '.join(str(int(x[i])) + r' \pm ' + str(int(y[i])) for x, y in zip(events, event_uncerts)) + r' \\' + '\n')
 
-                #print ', '.join(str(x[0]) + ' & ' for x, y in b.values())
-                
-
-                #print ', '.join(str(y[0]) + ' & ' for x, y in b.values())
-
-                l = [{'TTbar_mu_background': [27788.89963334056, 13115.937348527106, 3347.493030905431], 'TTbar_muon': [172984.55107924066, 74237.27154686248, 12724.78661393308]}, {'WJetsToLNu_TuneZ2Star_mu_background': [383179.1468881293, 261484.51429064505, 1587.9517304703465]}]
-
-                #l = {'TTbar_mu_background': [27788.89963334056, 13115.937348527106, 3347.49303090543], 'TTbar_muon': [172984.55107924066, 74237.27154686248, 12724.78661393308]}
-
-                #print ', '.join(str(x.values()) for x in l)
-
-                #print ', '.join(str(x) + ' && ' for x, y in l.items())
-                #print ', '.join(str(y[0]) + ' && ' for x, y in l.items())
-
+                # Write the closing code to the table
+                self.table_file.write('\t' + r'\hline' + '\n')
+                self.table_file.write(r'\end{table}' + '\n')
+                self.table_file.write(r'\end{center}' + '\n')

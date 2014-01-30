@@ -25,3 +25,6 @@ class ConfigHandler(ConfigParser.RawConfigParser):
 	
 	def get_lumi(self):
 		return self.get('default', 'lumi')
+
+        def get_latex_dataset_name(self, name):
+                return self.get('latex', name)

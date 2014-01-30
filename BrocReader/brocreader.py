@@ -38,9 +38,11 @@ class BrocReader(object):
 			overall[file_content[i]['process']].append(float(file_content[i]['cuts_overall']))
 
 		scaled_processes = {}
+                scaled_processes_unc = {}
 
 		for process in accepted.keys():
 			scaled_processes[process] = []
+                        scaled_processes_unc[process] = []
 
 			cross_section = self.config_reader.get_cross_section(process)
 			lumi          = self.config_reader.get_lumi()
@@ -49,7 +51,9 @@ class BrocReader(object):
 			proc.events_accepted(accepted[process])
 			proc.events_overall(overall[process])
 			proc.cross_section(cross_section)
-			scaled_events = proc.get_scaled_events(lumi)
+			scaled_events,scaled_uncertainties = proc.get_scaled_events(lumi)
 			scaled_processes[process] = scaled_events
+                        scaled_processes_unc[process] = scaled_uncertainties
 
-		return(scaled_processes)
+		return scaled_processes, scaled_processes_unc
+                

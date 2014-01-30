@@ -24,18 +24,18 @@ datasets = config_reader.get_datasets()
 files_to_read = glob.glob(os.path.join(input_dir, '*.txt'))
 
 scaled_datasets = []
+scaled_datasets_unc = []
 
 # Find the files corresponding to the allowed names in the config
 for file in files_to_read:
 	name = file[:-4].split("/")[-1]
 	if name in datasets:
 		broc_reader = brocreader.BrocReader(file, config_name)
-		scaled_events = broc_reader.readfile()
+		scaled_events, scaled_uncertainties = broc_reader.readfile()
 		scaled_datasets.append(scaled_events)
+                scaled_datasets_unc.append(scaled_uncertainties)
 
-#for i in range(len(scaled_datasets)):
-#	print scaled_datasets[i].keys()
-
+# Initalise and write the table
 table_creator = tablecreator.TableCreator(config_name)
-table_creator.writetable(scaled_datasets)
+table_creator.writetable(scaled_datasets, scaled_datasets_unc)
 		
