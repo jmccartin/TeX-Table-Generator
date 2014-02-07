@@ -1,0 +1,54 @@
+[default]
+input_dir = data/e
+output_dir = data/e
+datasets = TTbar:WJetsToLNu_TuneZ2Star:DYJetsToLL:TsChan:TbarsChan:TtChan:TbartChan:TtWChan:TbartWChan:Data
+#datasets = TTbar:WJets:TsChan:TtChan:TtWChan:Data
+lumi = 19.764
+
+[cross_sections]
+TTbar_muon = 33.8
+TTbar_mu_background = 191.4
+TsChan_mu_background = 3.79
+TbarsChan_mu_background = 1.76
+TtChan_mu_background = 56.4
+TbartChan_mu_background = 30.7
+TtWChan_mu_background = 11.1
+TbartWChan_mu_background = 11.1
+ZJets = 3503.71
+WJetsToLNu_TuneZ2Star_mu_background = 37509
+
+TTbar_electron = 33.8
+TTbar_e_background = 191.4
+TsChan_e_background = 3.79
+TbarsChan_e_background = 1.76
+TtChan_e_background = 56.4
+TbartChan_e_background = 30.7
+TtWChan_e_background = 11.1
+TbartWChan_e_background = 11.1
+DYJetsToLL_e_background = 3503.71
+WJetsToLNu_TuneZ2Star_e_background = 37509
+
+[preselection]
+WJetsToLNu_TuneZ2Star_mu_background = 0.373026415085
+WJetsToLNu_TuneZ2Star_e_background = 0.373026415085
+
+[latex]
+Data_muon = Data (\mu)
+TTbar_muon = t\bar{t} \to \mu
+TTbar_mu_background = t\bar{t} \to other
+WJetsToLNu_TuneZ2Star_mu_background = Wl\nu + jets
+TsChan_mu_background = s - channel
+TtChan_mu_background = t - channel
+TtWChan_mu_background = tW - channel
+
+Data_electron = Data (e)
+TTbar_electron = t\bar{t} \to e
+TTbar_e_background = t\bar{t} \to other
+WJetsToLNu_TuneZ2Star_e_background = Wl\nu + jets
+TsChan_e_background = t, s - chan.
+TtChan_e_background = t, t - chan.
+TtWChan_e_background = t, tW - chan.
+TbarsChan_e_background = \bar{t}, s - chan.
+TbartChan_e_background = \bar{t}, t - chan.
+TbartWChan_e_background = \bar{t}, tW - chan.
+DYJetsToLL_e_background = Z + jets

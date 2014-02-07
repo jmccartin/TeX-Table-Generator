@@ -14,6 +14,7 @@ class BrocReader(object):
 		accepted = {}
 		overall = {}
 		line = self.cut_file.readline()
+                # Read over all non-empty lines in the input txt file
 		while line != '':
 			if '=-----------IMPOSED-CUTS-----------=' in line:
 				line = self.cut_file.readline()
@@ -33,6 +34,7 @@ class BrocReader(object):
 				file_content.append(values)
 			line = self.cut_file.readline()
 
+                # Append the read-in values for cuts passed and overall to a dictionary with the process as the key
 		for i in range(0,len(file_content)):
 			accepted[file_content[i]['process']].append(float(file_content[i]['cuts_passed']))
 			overall[file_content[i]['process']].append(float(file_content[i]['cuts_overall']))
@@ -40,16 +42,30 @@ class BrocReader(object):
 		scaled_processes = {}
                 scaled_processes_unc = {}
 
+                # Loop over all processes and calculate the number of events at each cutstep for a given luminosity
 		for process in accepted.keys():
+
 			scaled_processes[process] = []
                         scaled_processes_unc[process] = []
 
-			cross_section = self.config_reader.get_cross_section(process)
+                        try:
+                                preselection = self.config_reader.get_preselection(process)
+                        except: 
+                                # If no defined preselection in config, assume there is none (efficiency = 1)
+                                preselection = 1.0
+
 			lumi          = self.config_reader.get_lumi()
+
+                        # Set the cross section for data so that the PhysicsProcess class knows not to scale it
+                        if 'Data' in process:
+                                cross_section = -1
+                        else:
+                                cross_section = self.config_reader.get_cross_section(process)
 
 			proc = PhysicsProcess(process)
 			proc.events_accepted(accepted[process])
 			proc.events_overall(overall[process])
+                        proc.preselection(preselection)
 			proc.cross_section(cross_section)
 			scaled_events,scaled_uncertainties = proc.get_scaled_events(lumi)
 			scaled_processes[process] = scaled_events
