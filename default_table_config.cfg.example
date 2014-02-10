@@ -2,8 +2,10 @@
 input_dir = data/e
 output_dir = data/e
 datasets = TTbar:WJetsToLNu_TuneZ2Star:DYJetsToLL:TsChan:TbarsChan:TtChan:TbartChan:TtWChan:TbartWChan:Data
-#datasets = TTbar:WJets:TsChan:TtChan:TtWChan:Data
 lumi = 19.764
+cutset_definitions = Ref. Sel.:n=4jets:2 CSVM btags
+combine_single_top = True
+single_top_channels = TsChan:TbarsChan:TtChan:TbartChan:TtWChan:TbartWChan
 
 [cross_sections]
 TTbar_muon = 33.8
@@ -52,3 +54,7 @@ TbarsChan_e_background = \bar{t}, s - chan.
 TbartChan_e_background = \bar{t}, t - chan.
 TbartWChan_e_background = \bar{t}, tW - chan.
 DYJetsToLL_e_background = Z + jets
+
+# Needed for translations, do not touch
+Total_MC = Total MC 
+Single_Top = Single Top

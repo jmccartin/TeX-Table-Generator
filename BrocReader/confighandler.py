@@ -42,3 +42,12 @@ class ConfigHandler(ConfigParser.RawConfigParser):
 
         def get_process_data_bool(self):
                 return run_on_data
+        
+        def get_cutset_definitions(self):
+                return self.get('default', 'cutset_definitions').split(':')
+
+        def combine_single_top(self):
+                return self.getboolean('default', 'combine_single_top')
+
+        def single_top_channels(self):
+                return self.get('default', 'single_top_channels').split(':')
