@@ -47,8 +47,7 @@ class TableCreator(object):
                         # Loop over all datasets for the cutset
                         for j in range(len(process_dict.keys())):
                                 key = process_dict.keys()[j]
-                                if key != 'Data':
-                                        print key
+                                if key[:4] != 'Data':
                                         events_passed_total += process_dict.values()[j][i]
                                         uncertainty_total += process_uncert_dict.values()[j][i]
                                 if combine_single_top:
