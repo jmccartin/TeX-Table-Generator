@@ -1,10 +1,10 @@
 import ConfigParser
 import os
 
+run_on_data = False
+
 class ConfigHandler(ConfigParser.RawConfigParser):
 	"""Gets and holds the config variables"""
-
-        run_on_data = False
 
 	def __init__(self, config_name):
 		ConfigParser.RawConfigParser.__init__(self)
@@ -51,3 +51,9 @@ class ConfigHandler(ConfigParser.RawConfigParser):
 
         def single_top_channels(self):
                 return self.get('default', 'single_top_channels').split(':')
+
+        def combine_wjets(self):
+                return self.getboolean('default', 'combine_wjets')
+
+        def wjets_channels(self):
+                return self.get('default', 'wjets_channels').split(':')

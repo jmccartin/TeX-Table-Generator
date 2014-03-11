@@ -2,6 +2,7 @@ import shutil
 import os
 import re
 import collections
+import math
 from BrocReader import confighandler
 
 class TableCreator(object):
@@ -30,18 +31,24 @@ class TableCreator(object):
                                 process_uncert_dict[key] = value
 
                 # Calculate the total events passed and associated uncertainties for each row
+                combine_single_top = self.config_reader.combine_single_top()
+                single_top_channels = self.config_reader.single_top_channels()
+                combine_wjets = self.config_reader.combine_wjets()
+                wjets_channels = self.config_reader.wjets_channels()
+                
                 total_single_top = []
                 total_single_top_uncert = []
+                total_wjets = []
+                total_wjets_uncert = []
                 total_mc = []
                 total_mc_uncert = []
 
-                combine_single_top = self.config_reader.combine_single_top()
-                single_top_channels = self.config_reader.single_top_channels()
-                
                 # Loop over cutsets
                 for i in range(len(process_dict.values()[0])):
                         single_top = 0
                         single_top_uncert = 0
+                        wjets = 0
+                        wjets_uncert = 0
                         events_passed_total = 0
                         uncertainty_total = 0
                         # Loop over all datasets for the cutset
@@ -49,16 +56,24 @@ class TableCreator(object):
                                 key = process_dict.keys()[j]
                                 if key[:4] != 'Data':
                                         events_passed_total += process_dict.values()[j][i]
-                                        uncertainty_total += process_uncert_dict.values()[j][i]
+                                        uncertainty_total += math.pow(process_uncert_dict.values()[j][i],2) # Sum the errors in quadrature
                                 if combine_single_top:
                                         if process_dict.keys()[j].split('_')[0] in single_top_channels:
                                                 single_top += process_dict.values()[j][i]
                                                 single_top_uncert += process_uncert_dict.values()[j][i]
+                                if combine_wjets:
+                                        # Combine the first two splits of the string due to naming conventions (ie W1Jets_TuneZ2)
+                                        if process_dict.keys()[j].split('_')[0] + '_' + process_dict.keys()[j].split('_')[1] in wjets_channels:
+                                                wjets += process_dict.values()[j][i]
+                                                wjets_uncert += process_uncert_dict.values()[j][i]
                         if combine_single_top:
                                 total_single_top.append(single_top)
                                 total_single_top_uncert.append(single_top_uncert)
+                        if combine_wjets:
+                                total_wjets.append(wjets)
+                                total_wjets_uncert.append(wjets_uncert)
                         total_mc.append(events_passed_total)
-                        total_mc_uncert.append(uncertainty_total)
+                        total_mc_uncert.append(math.sqrt(uncertainty_total))
 
                 # Create an ordered dictionary with associated values to the keys that were ordered in the previous step
                 sorted_processes = collections.OrderedDict()
@@ -70,7 +85,8 @@ class TableCreator(object):
                                 matched_name = re.search('('+str(dataset)+'\w+)', element)
                                 if matched_name:
                                         id = matched_name.groups()[0]
-                                        if combine_single_top and id.split('_')[0] in single_top_channels:
+                                        # If combining wjets or single top, don't add them into the dict just yet (ordering reasons)
+                                        if (combine_single_top and id.split('_')[0] in single_top_channels) or (combine_wjets and id.split('_')[0] in wjets_channels):
                                                 pass
                                         elif id.split('_')[0] == 'Data':
                                                 data_name = id
@@ -82,11 +98,16 @@ class TableCreator(object):
                 if combine_single_top:
                         sorted_processes['Single_Top'] = total_single_top
                         sorted_uncerts['Single_Top'] = total_single_top_uncert
+                if combine_wjets:
+                        sorted_processes['WJets'] = total_wjets
+                        sorted_uncerts['WJets'] = total_wjets_uncert
+
                 sorted_processes['Total_MC'] = total_mc
                 sorted_uncerts['Total_MC'] = total_mc_uncert
-                
-                sorted_processes['Data'] = process_dict.get(data_name)
-                sorted_uncerts['Data'] = process_uncert_dict.get(data_name)
+
+                if self.config_reader.get_process_data_bool():
+                        sorted_processes['Data'] = process_dict.get(data_name)
+                        sorted_uncerts['Data'] = process_uncert_dict.get(data_name)
 
                
                 row_label = self.config_reader.get_cutset_definitions()

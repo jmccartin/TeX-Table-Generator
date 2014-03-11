@@ -30,10 +30,9 @@ datasets_read = []
 scaled_datasets = []
 scaled_datasets_unc = []
 
-print 'Reading files...'
-
 # Find the files corresponding to the allowed names in the config
 for file in files_to_read:
+        print 'Reading ' + str(file) + '...'
 	name = file[:-4].split("/")[-1]
         broc_reader = brocreader.BrocReader(file, config_name)
         scaled_events, scaled_uncertainties = broc_reader.readfile()
@@ -44,7 +43,7 @@ for file in files_to_read:
 if 'Data' in datasets_read:
         config_reader.set_process_data_bool(True)
 
-print 'Creating table...\n'
+print '\nCreating table...\n'
 # Initalise and write the table
 table_creator = tablecreator.TableCreator(config_name)
 table_creator.writetable(scaled_datasets, scaled_datasets_unc)
