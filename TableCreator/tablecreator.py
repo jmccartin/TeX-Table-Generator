@@ -109,7 +109,25 @@ class TableCreator(object):
                         sorted_processes['Data'] = process_dict.get(data_name)
                         sorted_uncerts['Data'] = process_uncert_dict.get(data_name)
 
-               
+                # Calculate the efficiency and purity of the signal process
+                eff = []
+                pur = []
+                eff_pur = []
+
+                for i in range(0,len(sorted_processes[sorted_processes.keys()[0]])):
+                        if self.config_reader.get_process_data_bool():
+                                purity = sorted_processes[sorted_processes.keys()[0]][i]/sorted_processes[sorted_processes.keys()[-2]][i]
+                        else:
+                                purity = sorted_processes[sorted_processes.keys()[0]][i]/sorted_processes[sorted_processes.keys()[-1]][i]
+                        efficiency = sorted_processes[sorted_processes.keys()[0]][i]/sorted_processes[sorted_processes.keys()[0]][0]
+                        pur.append(purity)
+                        eff.append(efficiency)
+                        eff_pur.append(efficiency*purity)
+
+                sorted_processes['Eff'] = eff
+                sorted_processes['Pur'] = pur
+                sorted_processes['EffPur'] = eff_pur
+
                 row_label = self.config_reader.get_cutset_definitions()
 
                 # Construct the header of the table based on the amount of datasets
@@ -126,7 +144,9 @@ class TableCreator(object):
                 self.table_file.write('\t & $ '+'$ & $'.join(str(self.config_reader.get_latex_dataset_name(x)) for x in sorted_processes.keys()) + r'$ \\ ' + '\n' + '\t' + r'\hline' + '\n')
                 # Write the values + uncertainty to each column
                 for i in range(len(sorted_processes.values()[0])):
-                        self.table_file.write('\t' + str(row_label[i]) + '& $ ' + '$ & $'.join(str(int(x[i])) + r' \pm ' + str(int(y[i])) for x, y in zip(sorted_processes.values(), sorted_uncerts.values())) + r'$ \\' + '\n')
+                        self.table_file.write('\t' + str(row_label[i]) + '& $ ' + '$ & $'.join(str(int(x[i])) + r' \pm ' + str(int(y[i])) for x, y in zip(sorted_processes.values(), sorted_uncerts.values())) )
+                        self.table_file.write('$ & $ {0:.{1}f}'.format(sorted_processes['Eff'][i], 3) + '$ & $ {0:.{1}f}'.format(sorted_processes['Pur'][i], 3) + '$ & $ {0:.{1}f}'.format(sorted_processes['EffPur'][i], 3))  
+                        self.table_file.write(r'$ \\' + '\n')
 
                 # Write the closing code to the table
                 self.table_file.write('\t' + r'\hline' + '\n')

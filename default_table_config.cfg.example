@@ -79,3 +79,6 @@ Total_MC = Total MC
 Single_Top = Single Top
 Data = Data
 WJets = Wl\nu + jets
+Eff = \epsilon_{t\bar{t}}
+Pur = \pi
+EffPur = \epsilon_{t\bar{t}} \cdot \pi
