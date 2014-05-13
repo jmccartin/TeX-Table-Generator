@@ -1,13 +1,13 @@
 [default]
-input_dir = data/mu
-output_dir = data/mu
-datasets = TTbar:W1JetsToLNu_TuneZ2Star:W2JetsToLNu_TuneZ2Star:W3JetsToLNu_TuneZ2Star:W4JetsToLNu_TuneZ2Star:DYJetsToLL:TsChan:TbarsChan:TtChan:TbartChan:TtWChan:TbartWChan:Data
+input_dir = data/mu/CSVT_140512
+output_dir = data/mu/CSVT_140512
+datasets = TTbar:W1JetsToLNu_TuneZ2:W2JetsToLNu_TuneZ2:W3JetsToLNu_TuneZ2:W4JetsToLNu_TuneZ2:DYJetsToLL:TsChan:TbarsChan:TtChan:TbartChan:TtWChan:TbartWChan:Data
 lumi = 19.764
 cutset_definitions = Ref. Sel.:n=4jets:2 CSVT btags
 combine_single_top = True
 combine_wjets = True
 single_top_channels = TsChan:TbarsChan:TtChan:TbartChan:TtWChan:TbartWChan
-wjets_channels = W1JetsToLNu_TuneZ2:W2JetsToLNu_TuneZ2:W3JetsToLNu_TuneZ2:W4JetsToLNu_TuneZ2
+wjets_channels = W1JetsToLNu:W2JetsToLNu:W3JetsToLNu:W4JetsToLNu
 
 [cross_sections]
 TTbar_muon = 33.8
@@ -38,10 +38,10 @@ WJetsToLNu_TuneZ2Star_e_background = 37509
 
 [preselection]
 WJetsToLNu_TuneZ2Star_mu_background = 0.373026415085
-W1JetsToLNu_TuneZ2_mu_background = 0.287971908253
-W2JetsToLNu_TuneZ2_mu_background = 0.406972770237
-W3JetsToLNu_TuneZ2_mu_background = 0.59321628618
-W4JetsToLNu_TuneZ2_mu_background = 0.836575889424
+W1JetsToLNu_TuneZ2_mu_background = 0.431670177012
+W2JetsToLNu_TuneZ2_mu_background = 0.623487147678
+W3JetsToLNu_TuneZ2_mu_background = 0.840585169398
+W4JetsToLNu_TuneZ2_mu_background = 0.955798735141
 
 WJetsToLNu_TuneZ2Star_e_background = 0.373026415085
 

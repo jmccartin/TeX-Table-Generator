@@ -63,7 +63,9 @@ class TableCreator(object):
                                                 single_top_uncert += process_uncert_dict.values()[j][i]
                                 if combine_wjets:
                                         # Combine the first two splits of the string due to naming conventions (ie W1Jets_TuneZ2)
-                                        if process_dict.keys()[j].split('_')[0] + '_' + process_dict.keys()[j].split('_')[1] in wjets_channels:
+                                        #print process_dict.keys()[j].split('_')[0] + '_' + process_dict.keys()[j].split('_')[1]
+                                        #if process_dict.keys()[j].split('_')[0] + '_' + process_dict.keys()[j].split('_')[1] in wjets_channels:
+                                        if process_dict.keys()[j].split('_')[0] in wjets_channels:
                                                 wjets += process_dict.values()[j][i]
                                                 wjets_uncert += process_uncert_dict.values()[j][i]
                         if combine_single_top:
