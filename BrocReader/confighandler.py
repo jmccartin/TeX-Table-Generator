@@ -57,3 +57,6 @@ class ConfigHandler(ConfigParser.RawConfigParser):
 
         def wjets_channels(self):
                 return self.get('default', 'wjets_channels').split(':')
+
+        def get_decay_channel(self):
+                return self.get('default', 'decay_channel')
