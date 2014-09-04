@@ -18,7 +18,7 @@ class TableCreator(object):
 		self.table_file = os.path.join(self.output_dir, 'table.tex')
 		self.table_file = open(self.table_file, 'w')
                 
-        def writetable(self, processes, processes_unc):
+        def writetable(self, processes, processes_unc, overall_wevents):
 
                 # Sort the collection of all datasets into a single dictionary
                 process_dict = {}
@@ -148,12 +148,13 @@ class TableCreator(object):
                 pur = []
                 eff_pur = []
 
+                # Loop over cutsteps from ttbar sample only
                 for i in range(0,len(sorted_processes[sorted_processes.keys()[0]])):
                         if self.config_reader.get_process_data_bool():
                                 purity = sorted_processes[sorted_processes.keys()[0]][i]/sorted_processes[sorted_processes.keys()[-2]][i]
                         else:
                                 purity = sorted_processes[sorted_processes.keys()[0]][i]/sorted_processes[sorted_processes.keys()[-1]][i]
-                        efficiency = sorted_processes[sorted_processes.keys()[0]][i]/sorted_processes[sorted_processes.keys()[0]][0]
+                        efficiency = sorted_processes[sorted_processes.keys()[0]][i]/overall_wevents[sorted_processes.keys()[0]]
                         pur.append(purity)
                         eff.append(efficiency)
                         eff_pur.append(efficiency*purity)
@@ -179,7 +180,7 @@ class TableCreator(object):
                 # Write the values + uncertainty to each column
                 for i in range(len(sorted_processes.values()[0])):
                         self.table_file.write('\t' + str(row_label[i]) + '& $ ' + '$ & $'.join(str(int(x[i])) + r' \pm ' + str(int(y[i])) for x, y in zip(sorted_processes.values(), sorted_uncerts.values())) )
-                        self.table_file.write('$ & $ {0:.{1}f}'.format(sorted_processes['Eff'][i], 3) + '$ & $ {0:.{1}f}'.format(sorted_processes['Pur'][i], 3) + '$ & $ {0:.{1}f}'.format(sorted_processes['EffPur'][i], 3))  
+                        self.table_file.write('$ & $ {0:.{1}f}'.format(sorted_processes['Eff'][i], 4) + '$ & $ {0:.{1}f}'.format(sorted_processes['Pur'][i], 4) + '$ & $ {0:.{1}f}'.format(sorted_processes['EffPur'][i], 4))  
                         self.table_file.write(r'$ \\' + '\n')
 
                 # Write the closing code to the table

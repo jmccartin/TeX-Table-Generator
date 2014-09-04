@@ -41,6 +41,7 @@ class BrocReader(object):
 
 		scaled_processes = {}
                 scaled_processes_unc = {}
+                overall_wevents = {}
 
                 # Loop over all processes and calculate the number of events at each cutstep for a given luminosity
 		for process in accepted.keys():
@@ -71,5 +72,8 @@ class BrocReader(object):
 			scaled_processes[process] = scaled_events
                         scaled_processes_unc[process] = scaled_uncertainties
 
-		return scaled_processes, scaled_processes_unc
+                        
+                        overall_wevents[process] = overall[process][0]
+
+		return scaled_processes, scaled_processes_unc, overall_wevents
                 

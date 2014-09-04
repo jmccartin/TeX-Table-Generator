@@ -30,7 +30,10 @@ class PhysicsProcess(object):
                         else:
                                 selection_efficiency = self.events_accepted[i]/self.events_overall[i]
                                 normalised_events = self.preselection * selection_efficiency * self.cross_section * float(lumi) * 1000
-                                raw_frac_uncertainty = (1/math.sqrt(self.events_accepted[i]))
+                                if selection_efficiency != 0:
+                                        raw_frac_uncertainty = (1/math.sqrt(self.events_accepted[i]))
+                                else:
+                                        raw_frac_uncertainty = 0
                                 normalised_uncertainty = raw_frac_uncertainty*normalised_events
                                 events_accepted_normalised.append(normalised_events)
                                 event_uncertainties.append(normalised_uncertainty)
