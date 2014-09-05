@@ -1,40 +1,41 @@
 [default]
-input_dir = data/mu/CSVT_140512
-output_dir = data/mu/CSVT_140512
-datasets = TTbar:W1JetsToLNu_TuneZ2:W2JetsToLNu_TuneZ2:W3JetsToLNu_TuneZ2:W4JetsToLNu_TuneZ2:DYJetsToLL:TsChan:TbarsChan:TtChan:TbartChan:TtWChan:TbartWChan:Data
-lumi = 19.764
-cutset_definitions = Ref. Sel.:n=4jets:2 CSVT btags
+#input_dir = data/mu/20140821_MEMSel_HitFit_Chi2_5
+#output_dir = data/mu/20140821_MEMSel_HitFit_Chi2_5
+input_dir = data/mu/20140701_MEMSel_Mu_Final
+output_dir = data/mu/20140701_MEMSel_Mu_Final
+datasets = TTbar:W1JetsToLNu_TuneZ2:W2JetsToLNu_TuneZ2:W3JetsToLNu_TuneZ2:W4JetsToLNu_TuneZ2:DYJetsToLL:T_s-channel:Tbar_s-channel:T_t-channel:Tbar_t-channel:T_tW-channel:Tbar_tW-channel:Data
+lumi = 19.762
+cutset_definitions = primary vertex:1 isolated muon:dimuon veto:electron veto:$n_{jets} \geq 4$ @30GeV:$n_{jets} = 4$: $2 \times$ CSVT: HitFit
 combine_single_top = True
 combine_wjets = True
-single_top_channels = TsChan:TbarsChan:TtChan:TbartChan:TtWChan:TbartWChan
+single_top_channels = T_s-channel:Tbar_s-channel:T_t-channel:Tbar_t-channel:T_tW-channel:Tbar_tW-channel
 wjets_channels = W1JetsToLNu:W2JetsToLNu:W3JetsToLNu:W4JetsToLNu
+decay_channel = muon
 
 [cross_sections]
-TTbar_muon = 33.8
-TTbar_mu_background = 191.4
-TsChan_mu_background = 3.79
-TbarsChan_mu_background = 1.76
-TtChan_mu_background = 56.4
-TbartChan_mu_background = 30.7
-TtWChan_mu_background = 11.1
-TbartWChan_mu_background = 11.1
+# NNLO - 252.89
+#TTbar_muon = 37.9335
+#TTbar_mu_background = 214.9565
+
+# Measured Total - 234.2
+TTbar_muon = 35.13
+TTbar_mu_background = 199.07
+
+
+#TTbar_muon = 33.8
+#TTbar_mu_background = 191.4
+T_s-channel_mu_background = 3.79
+Tbar_s-channel_mu_background = 1.76
+T_t-channel_mu_background = 56.4
+Tbar_t-channel_mu_background = 30.7
+T_tW-channel_mu_background = 11.1
+Tbar_tW-channel_mu_background = 11.1
 DYJetsToLL_mu_background = 3503.71
 WJetsToLNu_TuneZ2Star_mu_background = 37509
 W1JetsToLNu_TuneZ2_mu_background = 6662.8
 W2JetsToLNu_TuneZ2_mu_background = 2159.2
 W3JetsToLNu_TuneZ2_mu_background = 640.4
 W4JetsToLNu_TuneZ2_mu_background = 264
-
-TTbar_electron = 33.8
-TTbar_e_background = 191.4
-TsChan_e_background = 3.79
-TbarsChan_e_background = 1.76
-TtChan_e_background = 56.4
-TbartChan_e_background = 30.7
-TtWChan_e_background = 11.1
-TbartWChan_e_background = 11.1
-DYJetsToLL_e_background = 3503.71
-WJetsToLNu_TuneZ2Star_e_background = 37509
 
 [preselection]
 WJetsToLNu_TuneZ2Star_mu_background = 0.373026415085
@@ -43,36 +44,23 @@ W2JetsToLNu_TuneZ2_mu_background = 0.623487147678
 W3JetsToLNu_TuneZ2_mu_background = 0.840585169398
 W4JetsToLNu_TuneZ2_mu_background = 0.955798735141
 
-WJetsToLNu_TuneZ2Star_e_background = 0.373026415085
 
 [latex]
 Data_muon = Data (\mu)
 TTbar_muon = t\bar{t} \to \mu
 TTbar_mu_background = t\bar{t} \to other
 WJetsToLNu_TuneZ2Star_mu_background = Wl\nu + jets
-TsChan_mu_background = s - channel
-TtChan_mu_background = t - channel
-TtWChan_mu_background = tW - channel
-TbarsChan_mu_background = \bar{t}, s - chan.
-TbartChan_mu_background = \bar{t}, t - chan.
-TbartWChan_mu_background = \bar{t}, tW - chan.
+T_s-channel_mu_background = t, s - channel
+T_t-channel_mu_background = t, t - channel
+T_tW-channel_mu_background = t, tW - channel
+Tbar_s-channel_mu_background = \bar{t}, s - chan.
+Tbar_t-channel_mu_background = \bar{t}, t - chan.
+Tbar_tW-channel_mu_background = \bar{t}, tW - chan.
 DYJetsToLL_mu_background = Z + jets
 W1JetsToLNu_TuneZ2_mu_background = Wl\nu + 1 jet
 W2JetsToLNu_TuneZ2_mu_background = Wl\nu + 2 jets
 W3JetsToLNu_TuneZ2_mu_background = Wl\nu + 3 jets
 W4JetsToLNu_TuneZ2_mu_background = Wl\nu + 4 jets
-
-Data_electron = Data (e)
-TTbar_electron = t\bar{t} \to e
-TTbar_e_background = t\bar{t} \to other
-WJetsToLNu_TuneZ2Star_e_background = Wl\nu + jets
-TsChan_e_background = t, s - chan.
-TtChan_e_background = t, t - chan.
-TtWChan_e_background = t, tW - chan.
-TbarsChan_e_background = \bar{t}, s - chan.
-TbartChan_e_background = \bar{t}, t - chan.
-TbartWChan_e_background = \bar{t}, tW - chan.
-DYJetsToLL_e_background = Z + jets
 
 # Needed for translations, do not touch
 Total_MC = Total MC 

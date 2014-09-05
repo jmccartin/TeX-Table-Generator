@@ -18,7 +18,7 @@ class TableCreator(object):
 		self.table_file = os.path.join(self.output_dir, 'table.tex')
 		self.table_file = open(self.table_file, 'w')
                 
-        def writetable(self, processes, processes_unc, overall_wevents):
+        def writetable(self, processes, processes_unc, sel_effs):
 
                 # Sort the collection of all datasets into a single dictionary
                 process_dict = {}
@@ -154,7 +154,7 @@ class TableCreator(object):
                                 purity = sorted_processes[sorted_processes.keys()[0]][i]/sorted_processes[sorted_processes.keys()[-2]][i]
                         else:
                                 purity = sorted_processes[sorted_processes.keys()[0]][i]/sorted_processes[sorted_processes.keys()[-1]][i]
-                        efficiency = sorted_processes[sorted_processes.keys()[0]][i]/overall_wevents[sorted_processes.keys()[0]]
+                        efficiency = sel_effs[sorted_processes.keys()[0]][i]
                         pur.append(purity)
                         eff.append(efficiency)
                         eff_pur.append(efficiency*purity)

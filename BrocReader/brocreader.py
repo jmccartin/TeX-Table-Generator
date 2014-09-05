@@ -41,39 +41,40 @@ class BrocReader(object):
 
 		scaled_processes = {}
                 scaled_processes_unc = {}
-                overall_wevents = {}
+                sel_effs = {}
 
                 # Loop over all processes and calculate the number of events at each cutstep for a given luminosity
 		for process in accepted.keys():
 
 			scaled_processes[process] = []
-                        scaled_processes_unc[process] = []
-
-                        try:
-                                preselection = self.config_reader.get_preselection(process)
-                        except: 
-                                # If no defined preselection in config, assume there is none (efficiency = 1)
-                                preselection = 1.0
-
-			lumi          = self.config_reader.get_lumi()
-
-                        # Set the cross section for data so that the PhysicsProcess class knows not to scale it
-                        if 'Data' in process:
-                                cross_section = -1
-                        else:
-                                cross_section = self.config_reader.get_cross_section(process)
+			scaled_processes_unc[process] = []
+			
+			try:
+				preselection = self.config_reader.get_preselection(process)
+			except: 
+				# If no defined preselection in config, assume there is none (efficiency = 1)
+				preselection = 1.0
+			
+			lumi = self.config_reader.get_lumi()
+			
+			# Set the cross section for data so that the PhysicsProcess class knows not to scale it
+			if 'Data' in process:
+				cross_section = -1
+			else:
+				cross_section = self.config_reader.get_cross_section(process)
 
 			proc = PhysicsProcess(process)
 			proc.events_accepted(accepted[process])
 			proc.events_overall(overall[process])
-                        proc.preselection(preselection)
+			proc.preselection(preselection)
 			proc.cross_section(cross_section)
 			scaled_events,scaled_uncertainties = proc.get_scaled_events(lumi)
 			scaled_processes[process] = scaled_events
-                        scaled_processes_unc[process] = scaled_uncertainties
+			scaled_processes_unc[process] = scaled_uncertainties
+			sel_effs[process] = []
+			for i in range(0,len(accepted[process])):
+				sel_effs[process].append(accepted[process][i]/overall[process][i])
 
-                        
-                        overall_wevents[process] = overall[process][0]
-
-		return scaled_processes, scaled_processes_unc, overall_wevents
+		return scaled_processes, scaled_processes_unc, sel_effs
                 
+			
